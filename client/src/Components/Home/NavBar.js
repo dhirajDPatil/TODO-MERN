@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -6,18 +6,17 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useNavigate } from 'react-router-dom';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import AccountMenu from './AccountMenu';
 
-export default function NavBar() {
+export default function NavBar({user, logoutHandle}) {
     const navigate = useNavigate();
-    const username = JSON.parse(localStorage.getItem('newUser')).userName;
     const addNewHandler = () => {
-        navigate('./newtodo', {replace: true})
+      navigate('./newtodo', {replace: true})
     }
-
-    const allTodoHandler = () => {
-        navigate('./alltodos', {replace: true})
-    }
+    
+  useEffect(()=> {
+    navigate('./alltodos', {replace: true})
+  },[user])  // remove navigate dependency -removed
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -27,11 +26,10 @@ export default function NavBar() {
             <AddCircleIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div" textTransform={ 'uppercase' }>
-            Personal Todos of {username}
+            All Tasks
           </Typography>
-          <IconButton onClick={allTodoHandler} edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-            <FormatListBulletedIcon />
-          </IconButton>
+          {/* <RDrawer user={user} logoutHandle={logoutHandle} /> */}
+          <AccountMenu user={user} logoutHandle={logoutHandle} />
         </Toolbar>
       </AppBar>
     </Box>

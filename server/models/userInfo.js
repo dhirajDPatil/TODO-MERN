@@ -12,6 +12,7 @@ const todoSchema = mongoose.Schema({
     task : String,
     isCompleted : Boolean,
     creationTime: Date,
+    priority: Number,
     uID: mongoose.Schema.Types.ObjectId 
 })
 

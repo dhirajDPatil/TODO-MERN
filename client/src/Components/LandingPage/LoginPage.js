@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Card, CardContent, Grid, TextField, Typography} from '@mui/material';
+import { Alert, Button, Card, CardContent, Grid, Stack, TextField, Typography} from '@mui/material';
 import { Box } from '@mui/system';
 import './LoginPage.css'
-import axios from 'axios';
+import { loginTodo } from '../../api';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,17 +13,17 @@ const LoginPage = () => {
   });
   const [loginError, setLoginError] = useState(undefined);
   
-  const loginHandle = (e) => {
+  const loginHandle = async (e) => {
       e.preventDefault();
-      axios.post('http://localhost:8000/login', user)
+      loginTodo(user)
       .then((response) => {
-        localStorage.setItem('newUser', JSON.stringify(user))
         navigate('/home', {replace: true});
       }).catch((res) => {
         const err = res.response.data.error;
         setLoginError(err)
         console.log(err);
       })
+      
   }
 
   const clearHandle = () => {
@@ -35,7 +35,13 @@ const LoginPage = () => {
 
   return (
     <>
-        <div className='formcontainer'>
+        <Stack sx={{ width: '100%' }} spacing={2}>
+          <Alert severity="info">No User logged In</Alert>
+          {/* <Alert severity="error">This is an error alert — check it out!</Alert>
+          <Alert severity="warning">This is a warning alert — check it out!</Alert>
+          <Alert severity="success">This is a success alert — check it out!</Alert> */}
+        </Stack>
+        <div className='formcontainer'> 
           <form onSubmit={loginHandle}>
           <Box sx={{flexGrow: 1, top:'200px'}}>
               <Card elevation={2}  style={{maxWidth:750, margin:'0 auto'}}>

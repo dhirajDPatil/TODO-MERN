@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Card, CardContent, Grid, TextField, Typography} from '@mui/material';
 import { Box } from '@mui/system';
-import axios from 'axios';
+import { logoutTodo, singUpTodo } from '../../api';
+import FileBase from 'react-file-base64';
 
 const RegistrationPage = () => {
     const navigate = useNavigate();
@@ -14,16 +15,19 @@ const RegistrationPage = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        const uinfo = {
-            userName: user.userName,
-            userID: user.userID,
-            password: user.password
-        }
-        localStorage.setItem('newUser',JSON.stringify({userName: user.userName, password: user.password}));
-        // success
-        const res = await axios.post('http://localhost:8000/signup', uinfo);
-        console.log(res);
+        await logoutTodo();
+        await singUpTodo(user)
         navigate('/home', {replace: true});
+        // const uinfo = {
+        //     userName: user.userName,
+        //     userID: user.userID,
+        //     password: user.password
+        // }
+        // localStorage.setItem('newUser',JSON.stringify({userName: user.userName, password: user.password}));
+        // success
+        // const res = await axios.post('http://localhost:8000/signup', uinfo, {
+        //     withCredentials: true
+        // });
         // api call to register a new user 
         // navigate to home page with 
     }
@@ -48,11 +52,13 @@ const RegistrationPage = () => {
                                 <TextField label='User Name' value={user.userName} onChange={(e)=> setUser(()=> ({...user, userName: e.target.value}))} placeholder="Enter User Name" variant='outlined' fullWidth />
                             </Grid> 
                             <Grid xs={12} item>
-                                <TextField label='User ID'  value={user.userID} onChange={(e)=> setUser(()=> ({...user, userID: e.target.value}))} placeholder="Enter User ID" variant='outlined' hidden fullWidth/>
+                                <TextField label='Password' type='password' value={user.password} onChange={(e)=> setUser(()=> ({...user, password: e.target.value}))} placeholder="Enter Password" variant='outlined' hidden fullWidth/>
                             </Grid>
                             <Grid xs={12} item>
-                                <TextField label='Password' type='password' value={user.password} onChange={(e)=> setUser(()=> ({...user, password: e.target.value}))} placeholder="Enter Password" variant='outlined' hidden fullWidth/>
-                            </Grid> 
+                                <Typography> Select Profile Picture 
+                                    <FileBase type='file' multiple={false} onDone={({base64}) => setUser({...user, userID: base64})} />
+                                </Typography>
+                            </Grid>
                             <Grid xs={12} columnSpacing={2} rowSpacing={1} style={{display:'flex', justifyContent: 'center', flexDirection: 'column' }} item>
                                 <Button type='submit' variant='contained' color='primary' size='small' sx={{ marginBottom: '5px', marginTop: '10px'}}  >Register</Button>
                                 <Button variant='contained' color='secondary' size='small' onClick={clearHandle} sx={{ marginBottom: '5px', marginTop: '5px'}}  >Clear</Button>

@@ -5,9 +5,11 @@ const ToDoReducer = (todos=[], action) => {
         case "GETALL_TODO":
             return action.payload;
         case "UPDATE_TODO":
-            return todos.filter((t)=> action.payload._id === t._id? action.payload : t)
+            return todos.map((t)=> action.payload._id === t._id? action.payload : t)
+        case "MARK_TODO":
+            return todos.map((t)=> action.payload._id === t._id? action.payload : t)
         case "DELETE_TODO":
-            return todos.filter((t)=> action.payload !== t._id)
+            return todos.filter((t)=> action.payload.id !== t._id)
         default:
            return todos;
     }
